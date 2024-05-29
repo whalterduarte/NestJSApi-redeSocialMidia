@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String            @id @default(uuid())
+  name             String
+  email            String            @unique
+  password         String
+  phone            String?
+  file             String?
+  bio              String?
+  friendRequests   FriendRequest[]   @relation("RequestedFriendships")
+  receivedRequests FriendRequest[]   @relation("ReceivedFriendships")
+  friends          Friend[]          @relation("FriendshipA")
+  friendsOf        Friend[]          @relation("FriendshipB")
+  posts            Post[]            @relation("UserPosts")
+  comments         Comment[]         @relation("UserComments")
+  postLikes        PostLike[]        @relation("UserPostLikes")
+  notifications    Notification[]    @relation("UserNotifications")
+  photos           Photo[]           @relation("UserPhotos")
+  photoComments    PhotoComment[]    @relation("UserPhotoComments")
+  photoLikes       PhotoLike[]       @relation("UserPhotoLikes")
+}
+
+model Photo {
+  id            Int            @id @default(autoincrement())
+  url           String
+  user          User           @relation("UserPhotos", fields: [userId], references: [id])
+  userId        String
+  comments      PhotoComment[] @relation("PhotoComments")
+  likes         PhotoLike[]    @relation("PhotoLikes")
+}
+
+model PhotoComment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  photo     Photo    @relation("PhotoComments", fields: [photoId], references: [id])
+  photoId   Int
+  author    User     @relation("UserPhotoComments", fields: [authorId], references: [id])
+  authorId  String
+}
+
+model PhotoLike {
+  id     Int   @id @default(autoincrement())
+  photo  Photo @relation("PhotoLikes", fields: [photoId], references: [id])
+  photoId Int
+  user   User  @relation("UserPhotoLikes", fields: [userId], references: [id])
+  userId String
+}
+
+model FriendRequest {
+  id          Int      @id @default(autoincrement())
+  requester   User     @relation("RequestedFriendships", fields: [requesterId], references: [id])
+  requesterId String
+  requestee   User     @relation("ReceivedFriendships", fields: [requesteeId], references: [id])
+  requesteeId String
+  status      String   @default("pending")
+}
+
+model Friend {
+  id       Int    @id @default(autoincrement())
+  user     User   @relation("FriendshipA", fields: [userId], references: [id])
+  userId   String
+  friend   User   @relation("FriendshipB", fields: [friendId], references: [id])
+  friendId String
+  @@unique([userId, friendId])
+}
+
+model Post {
+  id         Int        @id @default(autoincrement())
+  content    String?
+  file       String?
+  visibility String     @default("public")
+  createdAt  DateTime   @default(now())
+  author     User       @relation("UserPosts", fields: [authorId], references: [id])
+  authorId   String
+  comments   Comment[]  @relation("PostComments")
+  likes      PostLike[] @relation("PostLikes")
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  post      Post     @relation("PostComments", fields: [postId], references: [id])
+  postId    Int
+  author    User     @relation("UserComments", fields: [authorId], references: [id])
+  authorId  String
+}
+
+model PostLike {
+  id     Int  @id @default(autoincrement())
+  post   Post @relation("PostLikes", fields: [postId], references: [id])
+  postId Int
+  user   User @relation("UserPostLikes", fields: [userId], references: [id])
+  userId String
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  user      User     @relation("UserNotifications", fields: [userId], references: [id])
+  userId    String
+  read      Boolean  @default(false)
+}
