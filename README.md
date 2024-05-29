@@ -1,14 +1,15 @@
 API Endpoints
 Este é um guia dos endpoints disponíveis nesta API.
 
-Padrão de Commit com Emoji
-Usar emojis nos commits pode tornar mais fácil identificar o propósito ou intenção de cada commit. Aqui estão alguns exemplos de como você pode fazer isso:
-✨ :sparkles: para uma nova funcionalidade
-🐛 :bug: quando corrigir um bug
-📝 :memo: ao escrever documentação
-🚀 :rocket: para melhorias de desempenho
-✅ :white_check_mark: ao adicionar testes
-♻️ :recycle: ao refatorar código
+### Padrão de Commit com Emoji
+### Usar emojis nos commits pode tornar mais fácil identificar o propósito ou intenção de cada commit. Aqui estão alguns exemplos de como você pode fazer isso:
+
+- :sparkles: `:sparkles:` para uma nova funcionalidade
+- :bug: `:bug:` quando corrigir um bug
+- :memo: `:memo:` ao escrever documentação
+- :rocket: `:rocket:` para melhorias de desempenho
+- :white_check_mark: `:white_check_mark:` ao adicionar testes
+- :recycle: `:recycle:` ao refatorar código
 
 ## UserController:
 
