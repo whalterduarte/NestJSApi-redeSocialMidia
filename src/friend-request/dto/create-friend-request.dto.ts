@@ -6,3 +6,8 @@ export class CreateFriendRequestDto {
   @IsNotEmpty({ message: 'O campo requesteeId é obrigatório' })
   requesteeId: string;
 }
+
+export class AcceptFriendRequestDto {
+  @IsNotEmpty({ message: 'O campo requestId é obrigatório' })
+  requestId: number;
+}
