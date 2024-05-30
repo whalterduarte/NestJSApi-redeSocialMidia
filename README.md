@@ -23,12 +23,11 @@ Para instalar e executar esta API localmente, siga estas etapas:
 git clone https://github.com/whalterduarte/NestJSApi-redeSocialMidia
 
 Inicie o servidor:
-```bash
+
 npm start
+```
 
-
-Padrão de Commit com Emoji:
-
+## Padrão de Commit com Emoji:
 Para manter um histórico de commits organizado e compreensível, seguimos o seguinte padrão de commits com emojis:
 
 - :sparkles: :sparkles: para uma nova funcionalidade
