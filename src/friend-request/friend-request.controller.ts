@@ -18,6 +18,11 @@ export class FriendRequestController {
     return this.friendRequestService.create(createFriendRequestDto, userId);
   }
 
+  @Get('received')
+  getReceivedFriendRequests(@GetUserId() userId: string) {
+  return this.friendRequestService.getReceivedRequests(userId);
+  }
+
   @Post('accept')
   async acceptFriendRequest(@Body() acceptFriendRequestDto: AcceptFriendRequestDto) {
     return this.friendRequestService.acceptRequest(acceptFriendRequestDto);

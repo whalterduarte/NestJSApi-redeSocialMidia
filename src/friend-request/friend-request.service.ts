@@ -42,9 +42,20 @@ export class FriendRequestService {
     });
   }
 
+
+  async getReceivedRequests(userId: string) {
+    return this.prisma.friendRequest.findMany({
+      where: {
+        requesteeId: userId,
+      },
+    });
+  }
+
+
+
   async acceptRequest(acceptFriendRequestDto: AcceptFriendRequestDto) {
     const { requestId } = acceptFriendRequestDto;
-    
+
     if (!Number.isInteger(requestId) || requestId <= 0) {
         throw new ConflictException('ID de solicitação de amigo inválido');
     }
