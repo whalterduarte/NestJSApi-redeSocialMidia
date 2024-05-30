@@ -3,6 +3,13 @@
 ## Endpoints Disponíveis
 
 ### Usuário
+- **POST /user/all**
+  - *Descrição:* Lista todos usuários.
+  - *Método HTTP:* GET 
+
+- **POST /user/:username**
+  - *Descrição:* Busca usuário com base no username.
+  - *Método HTTP:* GET 
 
 - **POST /user/register**
   - *Descrição:* Registra um novo usuário.

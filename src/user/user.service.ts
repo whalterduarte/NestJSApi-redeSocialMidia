@@ -54,13 +54,22 @@ export class UserService {
 
 
 
-  findAll() {
-    return `list all`;
+  async findAll() {
+    const allUser = await this.prisma.user.findMany({})
+    return allUser
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
+  async findOne(username) {
+    
+    const user = await this.prisma.user.findUnique({
+      where: {username}
+    });
+    
+    if (!user){
+      throw new NotFoundException(`Usuário com username '${username}' não encontrado`);
+    }
+    return user
+}
 
   async update(username: string, updateUserDto: UpdateUserDto): Promise<User> {
     const existingUser = await this.prisma.user.findUnique({
