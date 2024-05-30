@@ -1,34 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { FriendService } from './friend.service';
-import { CreateFriendDto } from './dto/create-friend.dto';
-import { UpdateFriendDto } from './dto/update-friend.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { GetUserId } from '../auth/get-user.decorator';
 
 @Controller('friends')
+@UseGuards(AuthGuard)
 export class FriendController {
   constructor(private readonly friendService: FriendService) {}
 
-  @Post()
-  create(@Body() createFriendDto: CreateFriendDto) {
-    return this.friendService.create(createFriendDto);
-  }
-
   @Get()
-  findAll() {
-    return this.friendService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.friendService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFriendDto: UpdateFriendDto) {
-    return this.friendService.update(+id, updateFriendDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.friendService.remove(+id);
+  findAll(@GetUserId() userId: string) {
+    return this.friendService.findAll(userId);
   }
 }

@@ -1,7 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Patch } from '@nestjs/common';
 import { FriendRequestService } from './friend-request.service';
-import { AcceptFriendRequestDto, CreateFriendRequestDto } from './dto/create-friend-request.dto';
-import { UpdateFriendRequestDto } from './dto/update-friend-request.dto';
+import { CreateFriendRequestDto } from './dto/create-friend-request.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { GetUserId } from '../auth/get-user.decorator';
 
@@ -20,11 +19,14 @@ export class FriendRequestController {
 
   @Get('received')
   getReceivedFriendRequests(@GetUserId() userId: string) {
-  return this.friendRequestService.getReceivedRequests(userId);
+    return this.friendRequestService.getReceivedRequests(userId);
   }
 
-  @Post('accept')
-  async acceptFriendRequest(@Body() acceptFriendRequestDto: AcceptFriendRequestDto) {
-    return this.friendRequestService.acceptRequest(acceptFriendRequestDto);
+  @Patch(':id/accept')
+  acceptFriendRequest(
+    @Param('id') id: string,
+    @GetUserId() userId: string,
+  ) {
+    return this.friendRequestService.acceptFriendRequest(parseInt(id, 10), userId);
   }
 }

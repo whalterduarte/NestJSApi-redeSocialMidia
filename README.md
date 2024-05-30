@@ -11,7 +11,7 @@ Este documento descreve os endpoints disponíveis na API e fornece instruções 
 - **GET /user/profile/:username:** Obtém o perfil de um usuário específico.
 - **GET /friend-requests:** Obtém todas as solicitações de amizade.
 - **POST /friend-requests/accept:** Aceita uma solicitação de amizade.
-
+- **GET /friend-requests/received:** Listar solicitação de amizade com base no id.
 
 ## Como Instalar
 

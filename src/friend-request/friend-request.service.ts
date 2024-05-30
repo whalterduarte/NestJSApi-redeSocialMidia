@@ -1,12 +1,10 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { AcceptFriendRequestDto, CreateFriendRequestDto } from './dto/create-friend-request.dto';
-import { UpdateFriendRequestDto } from './dto/update-friend-request.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class FriendRequestService {
-
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService
@@ -42,7 +40,6 @@ export class FriendRequestService {
     });
   }
 
-
   async getReceivedRequests(userId: string) {
     return this.prisma.friendRequest.findMany({
       where: {
@@ -51,39 +48,51 @@ export class FriendRequestService {
     });
   }
 
+  async acceptFriendRequest(requestId: number, userId: string): Promise<any> {
+    const friendRequest = await this.prisma.friendRequest.findUnique({
+      where: { id: requestId },
+    });
 
-
-  async acceptRequest(acceptFriendRequestDto: AcceptFriendRequestDto) {
-    const { requestId } = acceptFriendRequestDto;
-
-    if (!Number.isInteger(requestId) || requestId <= 0) {
-        throw new ConflictException('ID de solicitação de amigo inválido');
+    if (!friendRequest) {
+      throw new NotFoundException('Solicitação de amizade não encontrada');
     }
 
-    try {
-        const friendRequest = await this.prisma.friendRequest.findUnique({
-            where: { id: requestId },
-        });
-
-        if (!friendRequest) {
-            throw new NotFoundException(`Solicitação de amizade com ID ${requestId} não encontrada`);
-        }
-
-        if (friendRequest.status !== 'pending') {
-            throw new ConflictException('Não é possível aceitar uma solicitação de amizade que não está pendente');
-        }
-
-        await this.prisma.friendRequest.update({
-            where: { id: requestId },
-            data: { status: 'accepted' },
-        });
-
-        return {
-          statusCode: 201,
-          message: `Solicitação de amizade com ID ${requestId} aceita com sucesso`,
-      };
-    } catch (error) {
-        throw new ConflictException('Ocorreu um erro ao aceitar a solicitação de amizade');
+    if (friendRequest.requesteeId !== userId) {
+      throw new ConflictException('Você não tem permissão para aceitar esta solicitação de amizade');
     }
-}
+
+    const existingFriendship = await this.prisma.friend.findFirst({
+      where: {
+        OR: [
+          { userId: friendRequest.requesterId, friendId: friendRequest.requesteeId },
+          { userId: friendRequest.requesteeId, friendId: friendRequest.requesterId },
+        ],
+      },
+    });
+
+    if (existingFriendship) {
+      throw new ConflictException('Vocês já são amigos');
+    }
+
+    await this.prisma.friendRequest.update({
+      where: { id: requestId },
+      data: { status: 'accepted' },
+    });
+
+    await this.prisma.friend.create({
+      data: {
+        userId: friendRequest.requesterId,
+        friendId: friendRequest.requesteeId,
+      },
+    });
+
+    await this.prisma.friend.create({
+      data: {
+        userId: friendRequest.requesteeId,
+        friendId: friendRequest.requesterId,
+      },
+    });
+
+    return { message: 'Solicitação de amizade aceita com sucesso' };
+  }
 }
