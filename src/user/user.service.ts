@@ -1,10 +1,11 @@
-import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserUploadService } from 'src/modules/upload/user-upload/user-upload.service';
 import * as bcrypt from 'bcrypt';
 import { validate } from 'class-validator';
+import { User } from '@prisma/client';
 
 
 @Injectable()
@@ -20,9 +21,12 @@ export class UserService {
       throw new BadRequestException(errors);
     }
 
-    const { name, email, password, phone, bio, file } = createUserDto;
+    const { name, email, password, phone, bio, file, username } = createUserDto;
     const existingUser = await this.prisma.user.findUnique({
-      where: { email },
+      where: { 
+        email,
+        username
+       },
     });
 
     if (existingUser) {
@@ -42,6 +46,7 @@ export class UserService {
         password: hashedPassword,
         phone,
         bio,
+        username,
         file: fileUrl,
       },
     });
@@ -57,8 +62,23 @@ export class UserService {
     return `This action returns a #${id} user`;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(username: string, updateUserDto: UpdateUserDto): Promise<User> {
+    const existingUser = await this.prisma.user.findUnique({
+      where: { 
+        username
+       },
+    });
+
+    if (!existingUser) {
+      throw new NotFoundException(`Usuário não encontrado com o username: ${username}`);
+    }
+
+    const updatedUser = await this.prisma.user.update({
+      where: { username },
+      data: updateUserDto,
+    });
+
+    return updatedUser;
   }
 
   remove(id: number) {

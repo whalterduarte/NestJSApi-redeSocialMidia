@@ -6,9 +6,11 @@ import { UserUploadModule } from 'src/modules/upload/user-upload/user-upload.mod
 import { UserUploadService } from 'src/modules/upload/user-upload/user-upload.service';
 
 
+
+
 @Module({
   imports: [UserUploadModule],
   controllers: [UserController],
-  providers: [UserService, PrismaService,UserUploadService],
+  providers: [UserService, PrismaService, UserUploadService],
 })
 export class UserModule {}

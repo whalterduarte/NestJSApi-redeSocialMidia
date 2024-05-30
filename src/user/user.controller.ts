@@ -1,17 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, UseInterceptors, UseGuards } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { AuthGuard } from 'src/auth/auth.guard'
 import type { Multer } from 'multer';
+import { CustomUserGuard } from 'src/auth/auth.user.guard';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
-  @UseInterceptors(FileInterceptor('file')) // 'file' é o nome do campo do formulário onde o arquivo é enviado
-  async create(@Body() createUserDto: CreateUserDto, @UploadedFile() file: Multer.File) { // Uso da tipagem do Multer
+  
+  @Post('register')
+  @UseInterceptors(FileInterceptor('file')) 
+  async create(@Body() createUserDto: CreateUserDto, @UploadedFile() file: Multer.File) {
     const createUserDtoWithFile = { ...createUserDto, file };
     return this.userService.create(createUserDtoWithFile);
   }
@@ -25,10 +28,10 @@ export class UserController {
   findOne(@Param('id') id: string) {
     return this.userService.findOne(+id);
   }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  @UseGuards(AuthGuard, CustomUserGuard)
+  @Patch('profile/:username')
+  update(@Param('username') username: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(username, updateUserDto);
   }
 
   @Delete(':id')

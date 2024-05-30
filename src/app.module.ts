@@ -16,6 +16,8 @@ import { UserUploadModule } from './modules/upload/user-upload/user-upload.modul
 import { PostUploadModule } from './modules/upload/post-upload/post-upload.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { AuthModule } from './auth/auth.module';
+
 
 @Module({
   imports: [
@@ -34,6 +36,7 @@ import { join } from 'path';
     PhotoLikeModule,
     UserUploadModule,
     PostUploadModule,
+    AuthModule,
   ],
   providers: [
     AppService,
