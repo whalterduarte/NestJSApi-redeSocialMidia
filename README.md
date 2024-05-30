@@ -1,38 +1,58 @@
 # Documentação da API
 
-Este documento descreve os endpoints disponíveis na API e fornece instruções sobre como instalá-la.
+## Endpoints Disponíveis
 
-# API Documentation
-
-## Endpoints Available
-
-### User
+### Usuário
 
 - **POST /user/register**
-  - *Description:* Registers a new user.
-  - *HTTP Method:* POST
+  - *Descrição:* Registra um novo usuário.
+  - *Método HTTP:* POST
 
-- **POST /login**
-  - *Description:* Logs in a user.
-  - *HTTP Method:* POST
+- **GET /user**
+  - *Descrição:* Retorna todos os usuários.
+  - *Método HTTP:* GET
 
-- **GET /user/profile/:username**
-  - *Description:* Retrieves the profile of a specific user.
-  - *HTTP Method:* GET
-  - *Parameters:*
-    - `:username`: The username of the user whose profile is to be retrieved.
+- **GET /user/:id**
+  - *Descrição:* Recupera informações de um usuário específico.
+  - *Método HTTP:* GET
+  - *Parâmetros:*
+    - `:id`: O ID do usuário a ser recuperado.
 
-- **GET /friend-requests**
-  - *Description:* Retrieves all friend requests.
-  - *HTTP Method:* GET
+- **PATCH /user/profile/:username**
+  - *Descrição:* Atualiza o perfil de um usuário específico.
+  - *Método HTTP:* PATCH
+  - *Parâmetros:*
+    - `:username`: O nome de usuário do usuário cujo perfil será atualizado.
 
-- **POST /friend-requests/accept**
-  - *Description:* Accepts a friend request.
-  - *HTTP Method:* POST
+- **DELETE /user/:id**
+  - *Descrição:* Remove um usuário específico.
+  - *Método HTTP:* DELETE
+  - *Parâmetros:*
+    - `:id`: O ID do usuário a ser removido.
+
+### Solicitações de Amizade
+
+- **POST /friend-requests**
+  - *Descrição:* Envia uma solicitação de amizade.
+  - *Método HTTP:* POST
 
 - **GET /friend-requests/received**
-  - *Description:* Lists received friend requests based on the user's ID.
-  - *HTTP Method:* GET
+  - *Descrição:* Retorna todas as solicitações de amizade recebidas pelo usuário.
+  - *Método HTTP:* GET
+
+- **PATCH /friend-requests/:id/accept**
+  - *Descrição:* Aceita uma solicitação de amizade.
+  - *Método HTTP:* PATCH
+  - *Parâmetros:*
+    - `:id`: O ID da solicitação de amizade a ser aceita.
+
+### Amigos
+
+- **GET /friends**
+  - *Descrição:* Retorna todos os amigos do usuário.
+  - *Método HTTP:* GET
+
+Certifique-se de ajustar a documentação conforme necessário para refletir a funcionalidade específica de cada rota.
 
 
 ## Como Instalar
