@@ -22,12 +22,12 @@ Para instalar e executar esta API localmente, siga estas etapas:
 ```bash
 git clone https://github.com/whalterduarte/NestJSApi-redeSocialMidia
 ```
+02. instale as dependencias:
 ```bash
-install 
 npm install
 ```
+03. Inicie o servidor:
 ```bash
-Inicie o servidor:
 npm start
 ```
 
