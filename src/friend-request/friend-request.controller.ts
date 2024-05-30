@@ -1,15 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { FriendRequestService } from './friend-request.service';
 import { CreateFriendRequestDto } from './dto/create-friend-request.dto';
 import { UpdateFriendRequestDto } from './dto/update-friend-request.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { User } from '@prisma/client';
 
-@Controller('friend-request')
+@Controller('friend-requests')
+@UseGuards(AuthGuard)
 export class FriendRequestController {
   constructor(private readonly friendRequestService: FriendRequestService) {}
 
   @Post()
-  create(@Body() createFriendRequestDto: CreateFriendRequestDto) {
-    return this.friendRequestService.create(createFriendRequestDto);
+  sendFriendRequest(
+  @GetUser() user: User,
+  @Body() createFriendRequestDto: CreateFriendRequestDto
+  ) {
+  return this.friendRequestService.create({ requesterId: user.id, ...createFriendRequestDto });
   }
 
   @Get()
