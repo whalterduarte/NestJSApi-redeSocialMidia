@@ -2,16 +2,38 @@
 
 Este documento descreve os endpoints disponíveis na API e fornece instruções sobre como instalá-la.
 
-## Endpoints Disponíveis
+# API Documentation
 
-### Usuário
+## Endpoints Available
 
-- **POST /user/register:** Registra um novo usuário.
-- **POST /login:** Realiza login de um usuário.
-- **GET /user/profile/:username:** Obtém o perfil de um usuário específico.
-- **GET /friend-requests:** Obtém todas as solicitações de amizade.
-- **POST /friend-requests/accept:** Aceita uma solicitação de amizade.
-- **GET /friend-requests/received:** Listar solicitação de amizade com base no id.
+### User
+
+- **POST /user/register**
+  - *Description:* Registers a new user.
+  - *HTTP Method:* POST
+
+- **POST /login**
+  - *Description:* Logs in a user.
+  - *HTTP Method:* POST
+
+- **GET /user/profile/:username**
+  - *Description:* Retrieves the profile of a specific user.
+  - *HTTP Method:* GET
+  - *Parameters:*
+    - `:username`: The username of the user whose profile is to be retrieved.
+
+- **GET /friend-requests**
+  - *Description:* Retrieves all friend requests.
+  - *HTTP Method:* GET
+
+- **POST /friend-requests/accept**
+  - *Description:* Accepts a friend request.
+  - *HTTP Method:* POST
+
+- **GET /friend-requests/received**
+  - *Description:* Lists received friend requests based on the user's ID.
+  - *HTTP Method:* GET
+
 
 ## Como Instalar
 
