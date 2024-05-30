@@ -3,21 +3,25 @@ import { FriendRequestService } from './friend-request.service';
 import { CreateFriendRequestDto } from './dto/create-friend-request.dto';
 import { UpdateFriendRequestDto } from './dto/update-friend-request.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { GetUser } from 'src/auth/get-user.decorator';
-import { User } from '@prisma/client';
+import { GetUserId } from '../auth/get-user.decorator';
 
 @Controller('friend-requests')
 @UseGuards(AuthGuard)
 export class FriendRequestController {
   constructor(private readonly friendRequestService: FriendRequestService) {}
-
+  
   @Post()
   sendFriendRequest(
-  @GetUser() user: User,
-  @Body() createFriendRequestDto: CreateFriendRequestDto
+    @Body() createFriendRequestDto: CreateFriendRequestDto,
+    @GetUserId() userId: string,
   ) {
-  return this.friendRequestService.create({ requesterId: user.id, ...createFriendRequestDto });
+    return this.friendRequestService.create(createFriendRequestDto, userId);
   }
+
+
+
+
+
 
   @Get()
   findAll() {

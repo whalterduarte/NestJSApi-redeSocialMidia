@@ -1,0 +1,29 @@
+[33mcommit 68cfb1a6cee9d6c056d1ef71dc76cefef0342748[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Whalter Duarte <whalterdev@gmail.com>
+Date:   Thu May 30 13:45:29 2024 -0300
+
+    :sparkles: - Add request friend
+
+[33mcommit e46929f4ce9d5d825240f2a98a15a732a7b6d2d3[m
+Author: Whalter Duarte <whalterdev@gmail.com>
+Date:   Wed May 29 22:35:00 2024 -0300
+
+    :recycle: - Add Guard Routes
+
+[33mcommit 7e5b312dea87d378249f9c1f7c73983d917ab964[m
+Author: Whalter Duarte <whalterdev@gmail.com>
+Date:   Wed May 29 18:13:32 2024 -0300
+
+    :recycle: - Remove folder public and gitignore
+
+[33mcommit c38de9478fb34f50ec7a8f02db6e4441575d4de8[m
+Author: Whalter Duarte <whalterdev@gmail.com>
+Date:   Wed May 29 18:10:01 2024 -0300
+
+    :memo: - Config readme
+
+[33mcommit 4fec847df2afaa75aff5e15e2b5c28d102e2a532[m
+Author: Whalter Duarte <whalterdev@gmail.com>
+Date:   Wed May 29 18:07:58 2024 -0300
+
+    :sparkles: - Add create user

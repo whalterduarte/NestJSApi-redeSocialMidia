@@ -2,22 +2,23 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { CreateFriendRequestDto } from './dto/create-friend-request.dto';
 import { UpdateFriendRequestDto } from './dto/update-friend-request.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class FriendRequestService {
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private jwtService: JwtService
+  ) {}
   
-  async create(createFriendRequestDto: CreateFriendRequestDto) {
-    const { requesterId, requesteeId } = createFriendRequestDto;
-
-    // Verificar se a solicitação já existe
+  async create(createFriendRequestDto: CreateFriendRequestDto, userId: string): Promise<any> {
+    const { requesteeId } = createFriendRequestDto;
     const existingRequest = await this.prisma.friendRequest.findFirst({
       where: {
-        OR: [
-          { requesterId, requesteeId },
-          { requesterId: requesteeId, requesteeId: requesterId }, // Verificar a inversa também
-        ],
+        requesterId: userId,
+        requesteeId,
+        status: 'pending',
       },
     });
 
@@ -25,15 +26,6 @@ export class FriendRequestService {
       throw new ConflictException('Solicitação de amizade já enviada');
     }
 
-    // Verificar se o usuário que envia a solicitação existe
-    const requesterExists = await this.prisma.user.findUnique({
-      where: { id: requesterId },
-    });
-    if (!requesterExists) {
-      throw new NotFoundException(`Usuário com ID ${requesterId} não encontrado`);
-    }
-
-    // Verificar se o usuário que recebe a solicitação existe
     const requesteeExists = await this.prisma.user.findUnique({
       where: { id: requesteeId },
     });
@@ -41,15 +33,15 @@ export class FriendRequestService {
       throw new NotFoundException(`Usuário com ID ${requesteeId} não encontrado`);
     }
 
-    // Criar a nova solicitação de amizade
     return this.prisma.friendRequest.create({
       data: {
-        requesterId,
+        requesterId: userId,
         requesteeId,
         status: 'pending',
       },
     });
   }
+
 
 
 
