@@ -8,27 +8,15 @@
   - *Descrição:* Registra um novo usuário.
   - *Método HTTP:* POST
 
-- **GET /user**
-  - *Descrição:* Retorna todos os usuários.
-  - *Método HTTP:* GET
-
-- **GET /user/:id**
-  - *Descrição:* Recupera informações de um usuário específico.
-  - *Método HTTP:* GET
-  - *Parâmetros:*
-    - `:id`: O ID do usuário a ser recuperado.
+- **POST /login**
+  - *Descrição:* Login do usuario.
+  - *Método HTTP:* POST
 
 - **PATCH /user/profile/:username**
   - *Descrição:* Atualiza o perfil de um usuário específico.
   - *Método HTTP:* PATCH
   - *Parâmetros:*
     - `:username`: O nome de usuário do usuário cujo perfil será atualizado.
-
-- **DELETE /user/:id**
-  - *Descrição:* Remove um usuário específico.
-  - *Método HTTP:* DELETE
-  - *Parâmetros:*
-    - `:id`: O ID do usuário a ser removido.
 
 ### Solicitações de Amizade
 
@@ -51,8 +39,6 @@
 - **GET /friends**
   - *Descrição:* Retorna todos os amigos do usuário.
   - *Método HTTP:* GET
-
-Certifique-se de ajustar a documentação conforme necessário para refletir a funcionalidade específica de cada rota.
 
 
 ## Como Instalar
