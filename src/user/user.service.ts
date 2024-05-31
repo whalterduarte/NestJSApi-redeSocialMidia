@@ -89,8 +89,4 @@ export class UserService {
 
     return updatedUser;
   }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
 }

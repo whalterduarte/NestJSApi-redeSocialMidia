@@ -18,12 +18,12 @@ export class UserController {
     const createUserDtoWithFile = { ...createUserDto, file };
     return this.userService.create(createUserDtoWithFile);
   }
-  
+  @UseGuards(AuthGuard)
   @Get('all')
   findAll() {
     return this.userService.findAll();
   }
-
+  @UseGuards(AuthGuard)
   @Get(':username')
   findOne(@Param('username') username: string) {
     return this.userService.findOne(username);
@@ -35,8 +35,5 @@ export class UserController {
     return this.userService.update(username, updateUserDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
-  }
+ 
 }

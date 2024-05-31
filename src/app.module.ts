@@ -3,7 +3,6 @@ import { APP_PIPE } from '@nestjs/core';
 import { ClassSerializerInterceptor } from '@nestjs/common';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
-import { PhotoModule } from './photo/photo.module';
 import { FriendRequestModule } from './friend-request/friend-request.module';
 import { FriendModule } from './friend/friend.module';
 import { PostModule } from './post/post.module';
@@ -17,6 +16,11 @@ import { PostUploadModule } from './modules/upload/post-upload/post-upload.modul
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
+import { PhotosProfileModule } from './photos-profile/photos-profile.module';
+import { PhotoUploadService } from './modules/upload/photo-upload/photo-upload.service';
+import { PhotoUploadController } from './modules/upload/photo-upload/photo-upload.controller';
+import { PhotoUploadModule } from './modules/upload/photo-upload/photo-upload.module';
+
 
 
 @Module({
@@ -25,7 +29,6 @@ import { AuthModule } from './auth/auth.module';
       rootPath: join(__dirname, '..', 'public'),
     }),
     UserModule,
-    PhotoModule,
     FriendRequestModule,
     FriendModule,
     PostModule,
@@ -37,6 +40,9 @@ import { AuthModule } from './auth/auth.module';
     UserUploadModule,
     PostUploadModule,
     AuthModule,
+    PhotosProfileModule,
+    PhotoUploadModule,
+
   ],
   providers: [
     AppService,
@@ -45,7 +51,10 @@ import { AuthModule } from './auth/auth.module';
       useClass: ValidationPipe,
     },
     
-    ClassSerializerInterceptor, 
+    ClassSerializerInterceptor,
+    
+    PhotoUploadService, 
   ],
+  controllers: [PhotoUploadController],
 })
 export class AppModule {}
