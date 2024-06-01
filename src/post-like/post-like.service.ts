@@ -1,26 +1,62 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreatePostLikeDto } from './dto/create-post-like.dto';
-import { UpdatePostLikeDto } from './dto/update-post-like.dto';
 
 @Injectable()
 export class PostLikeService {
-  create(createPostLikeDto: CreatePostLikeDto) {
-    return 'This action adds a new postLike';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async likePost(userId: string, createPostLikeDto: CreatePostLikeDto): Promise<{ message: string }> {
+    const { postId } = createPostLikeDto;
+
+    const post = await this.prisma.post.findUnique({
+      where: { id: parseInt(postId) }, 
+    });
+
+    if (!post) {
+      throw new BadRequestException('Post não encontrado');
+    }
+
+    const existingLike = await this.prisma.postLike.findFirst({
+      where: {
+        postId: parseInt(postId),
+        userId,
+      },
+    });
+
+    if (existingLike) {
+      throw new BadRequestException('Você já curtiu este post');
+    }
+
+    await this.prisma.postLike.create({
+      data: {
+        postId: parseInt(postId), 
+        userId,
+      },
+    });
+
+    return { message: 'Post curtido com sucesso' };
   }
 
-  findAll() {
-    return `This action returns all postLike`;
-  }
+  async unlikePost(userId: string, postId: number): Promise<{ message: string }> {
+    const existingLike = await this.prisma.postLike.findFirst({
+      where: {
+        postId,
+        userId,
+      },
+    });
 
-  findOne(id: number) {
-    return `This action returns a #${id} postLike`;
-  }
+    if (!existingLike) {
+      throw new BadRequestException('Você ainda não curtiu este post');
+    }
 
-  update(id: number, updatePostLikeDto: UpdatePostLikeDto) {
-    return `This action updates a #${id} postLike`;
-  }
+    await this.prisma.postLike.deleteMany({
+      where: {
+        postId,
+        userId,
+      },
+    });
 
-  remove(id: number) {
-    return `This action removes a #${id} postLike`;
+    return { message: 'Curtida removida com sucesso' };
   }
 }

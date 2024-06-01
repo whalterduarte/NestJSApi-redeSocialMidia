@@ -4,7 +4,6 @@ import { GetUserId } from '../auth/get-user.decorator';
 import { PhotoUploadService } from '../modules/upload/photo-upload/photo-upload.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterFile } from 'multer';
-import { CreatePhotosProfileDto } from './dto/create-photos-profile.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { PhotosProfileService } from './photos-profile.service';
 

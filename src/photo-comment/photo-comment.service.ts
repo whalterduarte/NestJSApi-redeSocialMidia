@@ -1,26 +1,44 @@
-import { Injectable } from '@nestjs/common';
-import { CreatePhotoCommentDto } from './dto/create-photo-comment.dto';
-import { UpdatePhotoCommentDto } from './dto/update-photo-comment.dto';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class PhotoCommentService {
-  create(createPhotoCommentDto: CreatePhotoCommentDto) {
-    return 'This action adds a new photoComment';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async createComment(photoId: string, authorId: string, content: string) {
+    return this.prisma.photoComment.create({
+      data: {
+        content,
+        photoId: Number(photoId),
+        authorId,
+      },
+    });
   }
 
-  findAll() {
-    return `This action returns all photoComment`;
+  async getCommentsForPhoto(photoId: string) {
+    return this.prisma.photoComment.findMany({
+      where: { photoId: Number(photoId) },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} photoComment`;
-  }
+  async deleteComment(commentId: string, userId: string) {
+    const comment = await this.prisma.photoComment.findUnique({
+      where: { id: Number(commentId) },
+      select: { authorId: true },
+    });
 
-  update(id: number, updatePhotoCommentDto: UpdatePhotoCommentDto) {
-    return `This action updates a #${id} photoComment`;
-  }
+    if (!comment) {
+      throw new NotFoundException('Comentário não encontrado');
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} photoComment`;
+    if (comment.authorId !== userId) {
+      throw new BadRequestException('Você não tem permissão para excluir este comentário');
+    }
+
+    await this.prisma.photoComment.delete({
+      where: { id: Number(commentId) },
+    });
+
+    return true;
   }
 }

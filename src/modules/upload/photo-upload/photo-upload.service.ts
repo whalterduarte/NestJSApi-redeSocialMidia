@@ -3,7 +3,7 @@ import { extname } from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import * as sharp from 'sharp';
 import * as path from 'path';
-import { MulterFile } from 'multer'; // Importe o tipo MulterFile
+import { MulterFile } from 'multer';
 
 @Injectable()
 export class PhotoUploadService {

@@ -1,34 +1,37 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Post, UseGuards, Body, Get, Param, Delete, BadRequestException } from '@nestjs/common';
+import { AuthGuard } from '../auth/auth.guard';
+import { GetUserId } from '../auth/get-user.decorator';
 import { PhotoCommentService } from './photo-comment.service';
 import { CreatePhotoCommentDto } from './dto/create-photo-comment.dto';
-import { UpdatePhotoCommentDto } from './dto/update-photo-comment.dto';
 
-@Controller('photo-comment')
+@Controller('comments')
+@UseGuards(AuthGuard)
 export class PhotoCommentController {
   constructor(private readonly photoCommentService: PhotoCommentService) {}
 
   @Post()
-  create(@Body() createPhotoCommentDto: CreatePhotoCommentDto) {
-    return this.photoCommentService.create(createPhotoCommentDto);
+  async createComment(
+    @Body() createPhotoCommentDto: CreatePhotoCommentDto,
+    @GetUserId() userId: string,
+  ) {
+    const { photoId, content } = createPhotoCommentDto;
+    return this.photoCommentService.createComment(photoId, userId, content);
   }
 
-  @Get()
-  findAll() {
-    return this.photoCommentService.findAll();
+  @Get(':photoId')
+  async getCommentsForPhoto(@Param('photoId') photoId: string) {
+    return this.photoCommentService.getCommentsForPhoto(photoId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.photoCommentService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePhotoCommentDto: UpdatePhotoCommentDto) {
-    return this.photoCommentService.update(+id, updatePhotoCommentDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.photoCommentService.remove(+id);
+  @Delete(':commentId')
+  async deleteComment(
+    @GetUserId() userId: string,
+    @Param('commentId') commentId: string,
+  ) {
+    const deleted = await this.photoCommentService.deleteComment(commentId, userId);
+    if (!deleted) {
+      throw new BadRequestException('O comentário não pode ser deletado');
+    }
+    return { message: 'Comentário deletado com sucesso' };
   }
 }

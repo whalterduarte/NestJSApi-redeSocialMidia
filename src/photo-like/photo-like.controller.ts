@@ -1,34 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { PhotoLikeService } from './photo-like.service';
+import { Controller, Post, Delete, UseGuards, Body, Param, BadRequestException, ParseIntPipe } from '@nestjs/common';
+import { AuthGuard } from '../auth/auth.guard';
+import { GetUserId } from '../auth/get-user.decorator';
 import { CreatePhotoLikeDto } from './dto/create-photo-like.dto';
-import { UpdatePhotoLikeDto } from './dto/update-photo-like.dto';
+import { PhotoLikeService } from './photo-like.service';
 
-@Controller('photo-like')
+@Controller('likes')
+@UseGuards(AuthGuard)
 export class PhotoLikeController {
   constructor(private readonly photoLikeService: PhotoLikeService) {}
 
   @Post()
-  create(@Body() createPhotoLikeDto: CreatePhotoLikeDto) {
-    return this.photoLikeService.create(createPhotoLikeDto);
+  async likePhoto(
+    @GetUserId() userId: string,
+    @Body() createPhotoLikeDto: CreatePhotoLikeDto,
+  ): Promise<{ message: string }> {
+    return this.photoLikeService.likePhoto(userId, createPhotoLikeDto);
   }
 
-  @Get()
-  findAll() {
-    return this.photoLikeService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.photoLikeService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePhotoLikeDto: UpdatePhotoLikeDto) {
-    return this.photoLikeService.update(+id, updatePhotoLikeDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.photoLikeService.remove(+id);
+  @Delete(':photoId')
+  async unlikePhoto(
+    @GetUserId() userId: string,
+    @Param('photoId', ParseIntPipe) photoId: number,
+  ): Promise<{ message: string }> {
+    return this.photoLikeService.unlikePhoto(userId, photoId);
   }
 }

@@ -1,34 +1,33 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Get, UseGuards, Body, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { AuthGuard } from '../auth/auth.guard';
+import { GetUserId } from '../auth/get-user.decorator';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
+import { MulterFile } from 'multer';
+import { FileInterceptor } from '@nestjs/platform-express';
 
-@Controller('post')
+@Controller('posts')
+@UseGuards(AuthGuard)
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Post()
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postService.create(createPostDto);
+  @UseInterceptors(FileInterceptor('file'))
+  async createPost(
+    @GetUserId() userId: string,
+    @Body() createPostDto: CreatePostDto,
+    @UploadedFile() file: MulterFile,
+  ) {
+    return this.postService.createPost(userId, createPostDto, file);
   }
 
   @Get()
-  findAll() {
-    return this.postService.findAll();
+  async getAllPosts() {
+    return this.postService.getAllPosts();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.postService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postService.update(+id, updatePostDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.postService.remove(+id);
+  @Get('user/:userId')
+  async getPostsByUserId(@GetUserId() userId: string) {
+    return this.postService.getPostsByUserId(userId);
   }
 }

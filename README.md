@@ -3,6 +3,79 @@
 ## Endpoints Disponíveis
 
 ### Usuário
+
+- **POST /user/register**
+  - *Descrição:* Registra um novo usuário.
+  - *Método HTTP:* POST
+
+- **POST /login**
+  - *Descrição:* Login do usuário.
+  - *Método HTTP:* POST
+
+- **PATCH /user/profile/:username**
+  - *Descrição:* Atualiza o perfil de um usuário específico.
+  - *Método HTTP:* PATCH
+  - *Parâmetros:*
+    - `:username`: O nome de usuário do usuário cujo perfil será atualizado.
+
+- **POST /user/all**
+  - *Descrição:* Lista todos usuários.
+  - *Método HTTP:* GET 
+
+- **POST /user/:username**
+  - *Descrição:* Busca usuário com base no username.
+  - *Método HTTP:* GET 
+
+### Solicitações de Amizade
+
+- **POST /friend-requests**
+  - *Descrição:* Envia uma solicitação de amizade.
+  - *Método HTTP:* POST
+
+- **GET /friend-requests/received**
+  - *Descrição:* Retorna todas as solicitações de amizade recebidas pelo usuário.
+  - *Método HTTP:* GET
+
+- **PATCH /friend-requests/:id/accept**
+  - *Descrição:* Aceita uma solicitação de amizade.
+  - *Método HTTP:* PATCH
+  - *Parâmetros:*
+    - `:id`: O ID da solicitação de amizade a ser aceita.
+
+### Amigos
+
+- **GET /friends**
+  - *Descrição:* Retorna todos os amigos do usuário.
+  - *Método HTTP:* GET
+
+### Photos
+
+- **GET /photos/profile**
+  - *Descrição:* Lista as fotos do usuário.
+  - *Método HTTP:* GET
+
+- **POST /photos/profile**
+  - *Descrição:* Posta uma foto no perfil do usuário.
+  - *Método HTTP:* POST
+
+### Likes e Comentários de Fotos
+
+- **POST /likes**
+  - *Descrição:* Dá um like em uma foto.
+  - *Método HTTP:* POST
+
+- **DELETE /likes/:photoId**
+  - *Descrição:* Remove um like em uma foto.
+  - *Método HTTP:* DELETE
+
+- **POST /comments**
+  - *Descrição:* Comenta em uma foto.
+  - *Método HTTP:* POST
+
+- **GET /comments/:photoId**
+  - *Descrição:* Retorna os comentários de uma foto.
+  - *Método HTTP:* GET
+
 - **POST /user/all**
   - *Descrição:* Lista todos usuários.
   - *Método HTTP:* GET 
@@ -50,12 +123,32 @@
 ### Photos
 
 - **GET /photos/profile**
-  - *Descrição:* Lista a fotos do usuário.
+  - *Descrição:* Lista as fotos do usuário.
   - *Método HTTP:* GET
 
 - **POST /photos/profile**
   - *Descrição:* Posta uma foto no perfil do usuário.
+  - *Método HTTP:* POST
+
+### Likes e Comentários de Fotos
+
+- **POST /likes**
+  - *Descrição:* Dá um like em uma foto.
+  - *Método HTTP:* POST
+
+- **DELETE /likes/:photoId**
+  - *Descrição:* Remove um like em uma foto.
+  - *Método HTTP:* DELETE
+
+- **POST /comments**
+  - *Descrição:* Comenta em uma foto.
+  - *Método HTTP:* POST
+
+- **GET /comments/:photoId**
+  - *Descrição:* Retorna os comentários de uma foto.
   - *Método HTTP:* GET
+
+
 
 
 

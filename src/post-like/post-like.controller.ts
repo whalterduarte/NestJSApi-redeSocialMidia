@@ -1,34 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { PostLikeService } from './post-like.service';
+import { Controller, Post, Delete, UseGuards, Body, Param, BadRequestException, ParseIntPipe } from '@nestjs/common';
+import { AuthGuard } from '../auth/auth.guard';
+import { GetUserId } from '../auth/get-user.decorator';
 import { CreatePostLikeDto } from './dto/create-post-like.dto';
-import { UpdatePostLikeDto } from './dto/update-post-like.dto';
+import { PostLikeService } from './post-like.service';
 
-@Controller('post-like')
+@Controller('posts')
+@UseGuards(AuthGuard)
 export class PostLikeController {
   constructor(private readonly postLikeService: PostLikeService) {}
 
-  @Post()
-  create(@Body() createPostLikeDto: CreatePostLikeDto) {
-    return this.postLikeService.create(createPostLikeDto);
+  @Post('likes')
+  async likePost(
+    @GetUserId() userId: string,
+    @Body() createPostLikeDto: CreatePostLikeDto,
+  ): Promise<{ message: string }> {
+    return this.postLikeService.likePost(userId, createPostLikeDto);
   }
 
-  @Get()
-  findAll() {
-    return this.postLikeService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.postLikeService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostLikeDto: UpdatePostLikeDto) {
-    return this.postLikeService.update(+id, updatePostLikeDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.postLikeService.remove(+id);
+  @Delete('likes/:postId')
+  async unlikePost(
+    @GetUserId() userId: string,
+    @Param('postId', ParseIntPipe) postId: number,
+  ): Promise<{ message: string }> {
+    return this.postLikeService.unlikePost(userId, postId);
   }
 }

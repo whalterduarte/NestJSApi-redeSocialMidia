@@ -1,14 +1,11 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreatePhotoCommentDto {
   @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'O comentário é obrigatório' })
   content: string;
-
-  @IsNotEmpty()
-  photoId: number;
 
   @IsString()
   @IsNotEmpty()
-  authorId: string;
+  photoId: string;
 }

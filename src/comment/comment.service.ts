@@ -1,26 +1,47 @@
-import { Injectable } from '@nestjs/common';
+// comment.service.ts
+
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
 
 @Injectable()
 export class CommentService {
-  create(createCommentDto: CreateCommentDto) {
-    return 'This action adds a new comment';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async createComment(postId: string, authorId: string, content: string) {
+    return this.prisma.comment.create({
+      data: {
+        content,
+        postId: Number(postId),
+        authorId,
+      },
+    });
   }
 
-  findAll() {
-    return `This action returns all comment`;
+  async getCommentsForPost(postId: string) {
+    return this.prisma.comment.findMany({
+      where: { postId: Number(postId) },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} comment`;
-  }
+  async deleteComment(commentId: string, userId: string) {
+    const comment = await this.prisma.comment.findUnique({
+      where: { id: Number(commentId) },
+      select: { authorId: true },
+    });
 
-  update(id: number, updateCommentDto: UpdateCommentDto) {
-    return `This action updates a #${id} comment`;
-  }
+    if (!comment) {
+      throw new NotFoundException('Comentário não encontrado');
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} comment`;
+    if (comment.authorId !== userId) {
+      throw new BadRequestException('Você não tem permissão para excluir este comentário');
+    }
+
+    await this.prisma.comment.delete({
+      where: { id: Number(commentId) },
+    });
+
+    return true;
   }
 }

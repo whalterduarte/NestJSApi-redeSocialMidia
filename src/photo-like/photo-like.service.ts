@@ -1,26 +1,62 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreatePhotoLikeDto } from './dto/create-photo-like.dto';
-import { UpdatePhotoLikeDto } from './dto/update-photo-like.dto';
 
 @Injectable()
 export class PhotoLikeService {
-  create(createPhotoLikeDto: CreatePhotoLikeDto) {
-    return 'This action adds a new photoLike';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async likePhoto(userId: string, createPhotoLikeDto: CreatePhotoLikeDto): Promise<{ message: string }> {
+    const { photoId } = createPhotoLikeDto;
+
+    const photo = await this.prisma.photo.findUnique({
+      where: { id: photoId },
+    });
+
+    if (!photo) {
+      throw new BadRequestException('Foto não encontrada');
+    }
+
+    const existingLike = await this.prisma.photoLike.findFirst({
+      where: {
+        photoId,
+        userId,
+      },
+    });
+
+    if (existingLike) {
+      throw new BadRequestException('Você já curtiu esta foto');
+    }
+
+    await this.prisma.photoLike.create({
+      data: {
+        photoId,
+        userId,
+      },
+    });
+
+    return { message: 'Foto curtida com sucesso' };
   }
 
-  findAll() {
-    return `This action returns all photoLike`;
-  }
+  async unlikePhoto(userId: string, photoId: number): Promise<{ message: string }> {
+    const existingLike = await this.prisma.photoLike.findFirst({
+      where: {
+        photoId,
+        userId,
+      },
+    });
 
-  findOne(id: number) {
-    return `This action returns a #${id} photoLike`;
-  }
+    if (!existingLike) {
+      throw new BadRequestException('Você ainda não curtiu esta foto');
+    }
 
-  update(id: number, updatePhotoLikeDto: UpdatePhotoLikeDto) {
-    return `This action updates a #${id} photoLike`;
-  }
+    await this.prisma.photoLike.deleteMany({
+      where: {
+        photoId,
+        userId,
+      },
+    });
 
-  remove(id: number) {
-    return `This action removes a #${id} photoLike`;
+    return { message: 'Curtida removida com sucesso' };
   }
 }
