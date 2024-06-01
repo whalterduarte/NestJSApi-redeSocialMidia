@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, UploadedFile, UseInterceptors, Body, BadRequestException } from '@nestjs/common';
+import { Controller, Post, UseGuards, UploadedFile, UseInterceptors, Body, BadRequestException, Get } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
 import { GetUserId } from '../auth/get-user.decorator';
 import { PhotoUploadService } from '../modules/upload/photo-upload/photo-upload.service';
@@ -6,6 +6,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterFile } from 'multer';
 import { CreatePhotosProfileDto } from './dto/create-photos-profile.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { PhotosProfileService } from './photos-profile.service';
 
 @Controller('photos')
 @UseGuards(AuthGuard)
@@ -13,6 +14,7 @@ export class PhotosProfileController {
   constructor(
     private readonly photoUploadService: PhotoUploadService,
     private readonly prisma: PrismaService,
+    private readonly photosProfileService: PhotosProfileService,
   ) {}
 
   @Post('profile')
@@ -37,5 +39,10 @@ export class PhotosProfileController {
     });
 
     return { url: photo.url };
+  }
+
+  @Get('profile')
+  async getUserPhotos(@GetUserId() userId: string) {
+    return this.photosProfileService.getUserPhotos(userId);
   }
 }

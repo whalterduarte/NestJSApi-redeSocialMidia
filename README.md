@@ -47,6 +47,17 @@
   - *Descrição:* Retorna todos os amigos do usuário.
   - *Método HTTP:* GET
 
+### Photos
+
+- **GET /photos/profile**
+  - *Descrição:* Lista a fotos do usuário.
+  - *Método HTTP:* GET
+
+- **POST /photos/profile**
+  - *Descrição:* Posta uma foto no perfil do usuário.
+  - *Método HTTP:* GET
+
+
 
 ## Como Instalar
 
