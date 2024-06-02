@@ -9,7 +9,7 @@ require('dotenv').config()
 export class UserUploadService {
   async saveUserFile(file): Promise<string> {
     if (!file || !file.originalname) {
-      return 'http://localhost:3000/uploads/user/userpadrao.png';
+      return `${process.env.BASEAPI}/uploads/user/userpadrao.png`;
     }
 
     const uniqueFileName = uuidv4() + extname(file.originalname);

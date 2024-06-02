@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { MulterFile } from 'multer';
 import { PhotoUploadService } from 'src/modules/upload/photo-upload/photo-upload.service';
 import { PrismaService } from 'src/prisma/prisma.service';

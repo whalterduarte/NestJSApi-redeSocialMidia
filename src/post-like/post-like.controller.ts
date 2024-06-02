@@ -1,4 +1,4 @@
-import { Controller, Post, Delete, UseGuards, Body, Param, BadRequestException, ParseIntPipe } from '@nestjs/common';
+import { Controller, Post, Delete, UseGuards, Body, Param, ParseIntPipe } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
 import { GetUserId } from '../auth/get-user.decorator';
 import { CreatePostLikeDto } from './dto/create-post-like.dto';

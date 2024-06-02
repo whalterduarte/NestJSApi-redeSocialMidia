@@ -1,4 +1,3 @@
-// user-upload.module.ts
 import { Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
 import { UserUploadController } from './user-upload.controller';

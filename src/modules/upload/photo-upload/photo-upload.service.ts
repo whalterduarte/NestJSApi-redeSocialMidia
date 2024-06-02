@@ -20,8 +20,6 @@ export class PhotoUploadService {
         .resize(1024, 1024) 
         .jpeg({ quality: 80 })
         .toFile(filePath); 
-  
-      // Construir a URL completa usando a URL base e o nome do arquivo
       const url = `${process.env.BASE_API}/uploads/photos-profile/${uniqueFileName}`;
   
       return url;

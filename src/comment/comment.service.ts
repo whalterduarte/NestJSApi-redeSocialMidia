@@ -1,8 +1,6 @@
-// comment.service.ts
-
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateCommentDto } from './dto/create-comment.dto';
+
 
 @Injectable()
 export class CommentService {

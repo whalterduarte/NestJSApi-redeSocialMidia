@@ -1,5 +1,3 @@
-// comment.controller.ts
-
 import { Controller, Post, UseGuards, Body, Get, Param, Delete, BadRequestException } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
 import { GetUserId } from '../auth/get-user.decorator';

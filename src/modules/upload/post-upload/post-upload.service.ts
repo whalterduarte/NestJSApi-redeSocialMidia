@@ -16,8 +16,6 @@ export class PostUploadService {
       const filePath = path.join(__dirname, '../../../../public/uploads/posts', uniqueFileName);
       
       await fs.promises.writeFile(filePath, file.buffer);
-      
-      // Construir a URL completa usando a URL base e o nome do arquivo
       const url = `${process.env.BASE_API}/uploads/posts/${uniqueFileName}`;
 
       return url;

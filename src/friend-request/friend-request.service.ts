@@ -1,5 +1,5 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { AcceptFriendRequestDto, CreateFriendRequestDto } from './dto/create-friend-request.dto';
+import { CreateFriendRequestDto } from './dto/create-friend-request.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 
